@@ -148,7 +148,7 @@ Derived values (totals, filteredTransactions, spendingCategories, insights signa
 ```
 src/
 ├── components/
-│   ├── TopBar.jsx          # Header with search, role toggle, theme, notifications
+│   ├── TopBar.jsx          # Header with search, role toggle, theme
 │   ├── SideNav.jsx         # Sidebar navigation + mobile drawer
 │   └── TransactionModal.jsx # Add/Edit transaction form (Admin only)
 ├── pages/
@@ -162,13 +162,12 @@ src/
 │       └── Settings.jsx    # Profile, security, display preferences
 ├── context/
 │   └── AppContext.jsx      # Global state + all derived data
+├── configs/
+│   └── navigationConfig.js # Sidebar and top menu link definitions
 ├── assets/
 │   ├── assets.js           # Mock transaction data + static config
-│   ├── screenshot-dashboard.png
-│   ├── screenshot-transactions.png
-│   ├── screenshot-insights.png
-│   └── screenshot-settings.png
-├── App.jsx                 # Route definitions
+│   └── screenshot-*.png    # Demo assets
+├── App.jsx                 # Route definitions + Toast notifications (react-hot-toast)
 ├── main.jsx                # Entry point with AppProvider
 └── index.css               # Global styles + Tailwind config
 ```
