@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, TrendingUp, TrendingDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, Pencil, Trash2, TrendingUp, TrendingDown, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { useAppContext } from "../../context/AppContext";
 
 const Transactions = () => {
@@ -21,6 +21,43 @@ const Transactions = () => {
   } = useAppContext();
 
   const [currentPage, setCurrentPage] = React.useState(1);
+
+  const handleExport = (format) => {
+    if (!filteredTransactions || filteredTransactions.length === 0) return;
+    
+    const dataToExport = filteredTransactions.map(tx => ({
+      ID: tx.id,
+      Date: tx.date,
+      Time: tx.time,
+      Title: tx.title,
+      Subtitle: tx.subtitle,
+      Amount: tx.amount,
+      Type: tx.type,
+      Category: tx.category,
+    }));
+
+    let content, mimeType, extension;
+
+    if (format === 'csv') {
+      const headers = Object.keys(dataToExport[0]).join(',');
+      const rows = dataToExport.map(obj => Object.values(obj).map(val => `"${val}"`).join(',')).join('\n');
+      content = `${headers}\n${rows}`;
+      mimeType = 'text/csv';
+      extension = 'csv';
+    } else {
+      content = JSON.stringify(dataToExport, null, 2);
+      mimeType = 'application/json';
+      extension = 'json';
+    }
+
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transactions_export.${extension}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   React.useEffect(() => {
     setCurrentPage(1);
@@ -90,6 +127,18 @@ const Transactions = () => {
                 <option value="amount-low">Amount: Low → High</option>
               </select>
             </div>
+            
+            <div className="relative group mt-5 z-10 w-28">
+              <button className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-100 px-4 py-2.5 rounded-md font-bold text-sm shadow-sm flex items-center space-x-2 transition-all hover:bg-gray-100 dark:hover:bg-slate-700">
+                <Download size={14} />
+                <span>Export</span>
+              </button>
+              <div className="absolute top-full left-0 mt-2 w-36 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col py-1">
+                <button onClick={() => handleExport('csv')} className="px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 font-medium">Export as CSV</button>
+                <button onClick={() => handleExport('json')} className="px-4 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 font-medium">Export as JSON</button>
+              </div>
+            </div>
+
             {activeRole === "Admin" && (
               <button
                 onClick={() => {
