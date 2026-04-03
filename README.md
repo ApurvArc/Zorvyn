@@ -1,7 +1,8 @@
 # Zorvyn — Finance Dashboard UI
 
 > Frontend internship assignment submission for **Zorvyn FinTech Pvt. Ltd.**  
-> Built by **Apurv Rameshwer Choudhary**
+> Built by **Apurv Rameshwer Choudhary**  
+> 🌐 **Live Demo:** [https://zorvyn-rust.vercel.app/dashboard](https://zorvyn-rust.vercel.app/dashboard)
 
 A clean, interactive, and animated finance dashboard built with React + Vite. Features role-based UI simulation, real-time data visualizations, and full dark/light mode support.
 
@@ -54,7 +55,22 @@ App runs at `http://localhost:5173`
 
 ---
 
-## Features
+## Core Features Implemented
+
+- ✅ **Dashboard Overview with Summary Cards** — Total Vault Balance, Monthly Inflow, and Outflow with animated count-up numbers.
+- ✅ **Time Based Visualization (e.g., Balance Trend)** — Animated Balance Trend line chart with time filters.
+- ✅ **Categorical Visualization (e.g., Spending Breakdown)** — Interactive Spending Breakdown donut chart.
+- ✅ **Transaction List with Details** — Full ledger detailing Date/Time, Description, Amount, Category, and Type.
+- ✅ **Transaction Filtering** — Category filter dropdown to isolate specific spending categories.
+- ✅ **Transaction Sorting or Search** — 4-way sorting and real-time Global Search bar in the header.
+- ✅ **Role Based UI (Viewer and Admin)** — Instant role toggle. Admins can add/edit/delete; Viewers are read-only.
+- ✅ **Insights Section** — Algorithmic analysis of Top Expenses, comparisons, and dynamic spending signals.
+- ✅ **State Management (Context, Redux, Zustand, etc.)** — Global state handled centrally via React Context API.
+- ✅ **Responsive Design** — Fully adaptive layout for mobile and desktop screens.
+
+---
+
+## Detailed Feature Breakdown
 
 ### 1. Dashboard Overview
 - **Summary cards** — Total Vault Balance, Monthly Inflow, Monthly Outflow with animated count-up numbers
@@ -118,10 +134,12 @@ Derived values (totals, filteredTransactions, spendingCategories, insights signa
 
 ## Optional Enhancements Implemented
 
-- ✅ **Dark mode** — full class-based dark mode with toggle, persisted to localStorage
-- ✅ **Data persistence** — role, theme, profile, savings goal all survive page refresh
-- ✅ **Animations** — Framer Motion page transitions, chart draw-in, count-up numbers, donut arc animations, staggered list entries
-- ✅ **Advanced filtering** — category + sort + global search combined
+- ✅ **Dark mode** — full class-based dark mode with toggle, persisted to localStorage.
+- ✅ **Data persistence (local storage)** — role, theme, profile, savings goal all survive page refresh.
+- ✅ **Mock API integration** — static/mock transaction data setup simulating a real API environment.
+- ✅ **Animations or transitions** — Framer Motion page transitions, chart draw-in, count-up numbers, donut arc animations.
+- ✅ **Export functionality (CSV/JSON)** — One-click export download available on the Transactions page.
+- ✅ **Advanced filtering or grouping** — category filter + dynamic sorting + global search combined.
 
 ---
 
