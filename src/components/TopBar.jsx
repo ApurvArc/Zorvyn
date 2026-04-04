@@ -81,19 +81,17 @@ const TopBar = () => {
         </button>
         <span className="hidden sm:inline select-none text-gray-300 dark:text-gray-600">|</span>
 
-        {/* Add Transaction (Admin only) */}
         {activeRole === "Admin" && (
-          <button
-            onClick={() => { setEditingTransaction(null); setIsModalOpen(true); }}
-            className="hidden sm:flex items-center space-x-1.5 bg-primary-container px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-white transition-all hover:brightness-110"
-          >
-            <Plus size={14} />
-            <span>Add</span>
-          </button>
-        )}
-
-        {activeRole === "Admin" && (
-          <span className="hidden sm:inline select-none text-gray-300 dark:text-gray-600">|</span>
+          <>
+            <button
+              onClick={() => { setEditingTransaction(null); setIsModalOpen(true); }}
+              className="hidden sm:flex items-center space-x-1.5 bg-primary-container px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest text-white transition-all hover:brightness-110"
+            >
+              <Plus size={14} />
+              <span>Add</span>
+            </button>
+            <span className="hidden sm:inline select-none text-gray-300 dark:text-gray-600">|</span>
+          </>
         )}
 
         {/* Theme Toggle */}

@@ -79,13 +79,16 @@ App runs at `http://localhost:5173`
 - **Recent Transactions** — Live feed of the latest ledger entries
 
 ### 2. Transactions (Financial Ledger)
-- Full transaction table with Date/Time, Description, Amount, Category, Type
-- **Category filter** — dropdown to filter by any spending category
-- **Sort By** — Latest First, Oldest First, Amount High→Low, Amount Low→High
-- **Global Search** — "Search Zorvyn..." bar in the header filters transactions in real time
-- **Pagination** — 8 items per page with smart ellipsis pagination
-- **Empty state** — graceful "No transactions match" message when filters yield nothing
-- Summary stats footer — Total Flow, Net Income, Operating Expenses, Audit Compliance
+- **Comprehensive Ledger** — Detail-rich table with Date/Time, Description, Subtitle/Reference, Amount, Category, and Type.
+- **Unified Filter System** — Single "Filters" dropdown containing:
+    - **Category filter** — isolate specific spending pools.
+    - **Tiered Sorting** — 4-way sorting (Latest, Oldest, Amount High→Low, Amount Low→High).
+    - **Amount Range** — filter by "Min" and "Max" numeric values.
+    - **Date Range** — precise "Start Date" to "End Date" isolation.
+- **Staging & Validation** — Stage multiple filter changes and click **"Apply Filters"** to commit. Features real-time error validation (e.g., Min > Max warnings) and an auto-lock on the apply button for illegal states.
+- **Global Search** — Dedicated search bar in the header filters transactions by title or category in real-time.
+- **Pagination** — 8 items per page with smart ellipsis pagination and state preservation.
+- **Export Engine** — One-click download as **CSV** or **JSON**, fully synchronized with your current filtered view.
 
 ### 3. Role-Based UI (Frontend Simulation)
 Switch roles instantly via the **`● Admin` / `● Viewer` pill** in the top bar (no reload needed).
@@ -113,7 +116,13 @@ Role is persisted in `localStorage` so it survives page refreshes.
 - **Display** — dark/light mode toggle, motion/animation toggle
 - **Savings Goal** — adjustable target savings rate (1–80%) used by Insights signals
 
-### 6. State Management
+### 6. Export Functionality
+- **Dual Format Support** — One-click export download as **CSV** or **JSON** available on the Transactions page.
+- **Data Synchronization** — The export strictly follows your active filters (Search, Range, Category).
+- **Audit Ready** — Includes a `RawValue` field (numeric) alongside the formatted string for easier processing in Excel/accounting tools.
+- **Dynamic Filenaming** — Automatically generates timestamps in filenames (e.g., `zorvyn_export_2026-04-04.csv`).
+
+### 7. State Management
 All state lives in `AppContext` and is exported via `useAppContext()`:
 
 | State | Description |
@@ -121,12 +130,15 @@ All state lives in `AppContext` and is exported via `useAppContext()`:
 | `activeRole` | "Admin" or "Viewer" — persisted to localStorage |
 | `transactions` | Full transaction array, supports add/update/delete |
 | `searchTerm` | Global search string — filters `filteredTransactions` |
-| `selectedCategory` | Category filter dropdown value |
+| `selectedCategory` | Global Category filter value |
+| `minAmount` / `maxAmount` | Amount range filter bounds |
+| `startDate` / `endDate` | Date range filter bounds (ISO strings) |
 | `sortOrder` | "latest" / "oldest" / "amount-high" / "amount-low" |
 | `theme` | "light" or "dark" — persisted to localStorage |
 | `motionEnabled` | Enables/disables all Framer Motion animations |
 | `userProfile` | Name, email, bio — persisted to localStorage |
 | `savingsGoal` | Target savings % — persisted to localStorage |
+| `auditCompliance` | Calculated % of categorized transactions |
 
 Derived values (totals, filteredTransactions, spendingCategories, insights signals, etc.) are computed with `useMemo` and never stored redundantly.
 
@@ -138,8 +150,8 @@ Derived values (totals, filteredTransactions, spendingCategories, insights signa
 - ✅ **Data persistence (local storage)** — role, theme, profile, savings goal all survive page refresh.
 - ✅ **Mock API integration** — static/mock transaction data setup simulating a real API environment.
 - ✅ **Animations or transitions** — Framer Motion page transitions, chart draw-in, count-up numbers, donut arc animations.
-- ✅ **Export functionality (CSV/JSON)** — One-click export download available on the Transactions page.
-- ✅ **Advanced filtering or grouping** — category filter + dynamic sorting + global search combined.
+- ✅ **Export functionality (CSV/JSON)** — Optimized exports with raw numeric values and dynamic naming.
+- ✅ **Advanced filtering** — Unified staged filtering with amount/date ranges and real-time validation.
 
 ---
 

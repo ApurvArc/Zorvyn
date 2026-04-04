@@ -144,6 +144,21 @@ export const AppProvider = ({ children }) => {
     return isDebit ? -num : num;
   };
 
+  const getCategoryColor = (name) => {
+    const key = String(name || "Other").trim();
+    if (key.toLowerCase() === "other") return "#94a3b8";
+    const hash = [...key].reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 0);
+    const hue = hash % 360;
+    return `hsl(${hue} 72% 56%)`;
+  };
+
+  const parseTxDate = (dateStr) => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const [monthDay, year] = dateStr.split(", ");
+    const [month, day] = monthDay.split(" ");
+    return new Date(parseInt(year), months.indexOf(month), parseInt(day));
+  };
+
   // --- Derived: totals ---
   const totals = useMemo(() => {
     return transactions.reduce(
@@ -155,6 +170,16 @@ export const AppProvider = ({ children }) => {
       },
       { inflow: 0, outflow: 0 }
     );
+  }, [transactions]);
+
+  // --- Derived: expense map (shared between breakdown and insights) ---
+  const expenseMap = useMemo(() => {
+    const map = {};
+    transactions.forEach((tx) => {
+      const val = parsedAmount(tx.amount);
+      if (val < 0) map[tx.category] = (map[tx.category] || 0) + Math.abs(val);
+    });
+    return map;
   }, [transactions]);
 
   // --- Derived: dashboard summary cards ---
@@ -199,15 +224,7 @@ export const AppProvider = ({ children }) => {
 
   // --- Derived: spending by category (from debit transactions) ---
   const spendingCategories = useMemo(() => {
-    const expenseMap = {};
-    let totalExpenses = 0;
-    transactions.forEach((tx) => {
-      const val = parsedAmount(tx.amount);
-      if (val < 0) {
-        totalExpenses += Math.abs(val);
-        expenseMap[tx.category] = (expenseMap[tx.category] || 0) + Math.abs(val);
-      }
-    });
+    const totalExpenses = Object.values(expenseMap).reduce((s, v) => s + v, 0);
 
     const sorted = Object.entries(expenseMap)
       .map(([name, val]) => ({
@@ -228,21 +245,17 @@ export const AppProvider = ({ children }) => {
       barColor: BAR_COLORS[idx % BAR_COLORS.length],
       hexColor: COLORS[idx % COLORS.length],
     }));
-  }, [transactions]);
+  }, [expenseMap]);
+
+  // --- Derived: sorted display categories (used in Dashboard & Insights) ---
+  const displayCategories = useMemo(() => {
+    return spendingCategories.map(cat => ({ ...cat, name: cat.name || "Other" }))
+      .sort((a, b) => (b.rawAmount || 0) - (a.rawAmount || 0));
+  }, [spendingCategories]);
 
   // --- Derived: filtered transactions for ledger ---
   const filteredTransactions = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
-
-    const parseTxDate = (dateStr) => {
-      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const parts = dateStr.split(", ");
-      const dateParts = parts[0].split(" ");
-      const m = months.indexOf(dateParts[0]);
-      const d = parseInt(dateParts[1]);
-      const y = parseInt(parts[1]);
-      return new Date(y, m, d);
-    };
 
     const parseInputDate = (dateStr) => {
       if (!dateStr) return null;
@@ -303,13 +316,6 @@ export const AppProvider = ({ children }) => {
 
   // --- Derived: top spending category (for insights critical expense card) ---
   const topSpendCategory = useMemo(() => {
-    const expenseMap = {};
-    transactions.forEach((tx) => {
-      const val = parsedAmount(tx.amount);
-      if (val < 0) {
-        expenseMap[tx.category] = (expenseMap[tx.category] || 0) + Math.abs(val);
-      }
-    });
     if (Object.keys(expenseMap).length === 0) return null;
     const top = Object.entries(expenseMap).sort((a, b) => b[1] - a[1])[0];
     const totalOut = totals.outflow || 1;
@@ -319,7 +325,7 @@ export const AppProvider = ({ children }) => {
       formattedAmount: `$${top[1].toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       pctOfOutflow: Math.round((top[1] / totalOut) * 100),
     };
-  }, [transactions, totals.outflow]);
+  }, [expenseMap, totals.outflow]);
 
   // --- Derived: weekly flow comparison (last 8 weeks: current vs. prior) ---
   const flowComparison = useMemo(() => {
@@ -340,14 +346,7 @@ export const AppProvider = ({ children }) => {
       transactions.forEach((tx) => {
         const val = parsedAmount(tx.amount);
         if (val >= 0) return;
-        const parts = tx.date.split(", ");
-        const dateParts = parts[0].split(" ");
-        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-        const m = months.indexOf(dateParts[0]);
-        const d = parseInt(dateParts[1]);
-        const y = parseInt(parts[1]);
-        if (isNaN(m) || isNaN(d) || isNaN(y)) return;
-        const txDate = new Date(y, m, d);
+        const txDate = parseTxDate(tx.date);
         if (txDate >= weekStart && txDate <= weekEnd) thisOut += Math.abs(val);
         if (txDate >= prevWeekStart && txDate <= prevWeekEnd) lastOut += Math.abs(val);
       });
@@ -383,21 +382,11 @@ export const AppProvider = ({ children }) => {
     const prevWeekEnd = new Date(now);
     prevWeekEnd.setDate(now.getDate() - 7);
 
-    const parseDate = (tx) => {
-      const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-      const parts = tx.date.split(", ");
-      const dateParts = parts[0].split(" ");
-      const m = months.indexOf(dateParts[0]);
-      const d = parseInt(dateParts[1]);
-      const y = parseInt(parts[1]);
-      return new Date(y, m, d);
-    };
-
     let thisWeekSpend = 0, prevWeekSpend = 0;
     transactions.forEach((tx) => {
       const val = parsedAmount(tx.amount);
       if (val >= 0) return;
-      const d = parseDate(tx);
+      const d = parseTxDate(tx.date);
       if (d >= thisWeekStart) thisWeekSpend += Math.abs(val);
       else if (d >= prevWeekStart && d <= prevWeekEnd) prevWeekSpend += Math.abs(val);
     });
@@ -488,6 +477,10 @@ export const AppProvider = ({ children }) => {
     userProfile,
     setUserProfile,
 
+    // Utility
+    parsedAmount,
+    getCategoryColor,
+
     // CRUD
     addTransaction,
     updateTransaction,
@@ -497,6 +490,7 @@ export const AppProvider = ({ children }) => {
     totals,
     dashboardCards,
     spendingCategories,
+    displayCategories,
     filteredTransactions,
     categories,
     savingsPotential,

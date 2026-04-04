@@ -33,10 +33,8 @@ const TransactionModal = () => {
       });
       setNewCategory("");
     } else {
-      const defaultCategory = categoryOptions.includes("Operations")
-        ? "Operations"
-        : (categoryOptions[0] || "Other");
-      setFormData({ title: "", subtitle: "", amount: "", type: "Credit", category: defaultCategory });
+      const category = categoryOptions.includes("Operations") ? "Operations" : (categoryOptions[0] || "Other");
+      setFormData({ title: "", subtitle: "", amount: "", type: "Credit", category });
       setNewCategory("");
     }
   }, [editingTransaction, isModalOpen, categoryOptions]);
@@ -54,18 +52,19 @@ const TransactionModal = () => {
       ? `+ $${parsedAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
       : `- $${parsedAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+    const isCredit = formData.type === "Credit";
     const baseTxData = {
       title: formData.title || (editingTransaction ? "Updated Transaction" : "New Transaction"),
       subtitle: formData.subtitle || "Manual Entry",
       amount: formattedAmount,
       type: formData.type,
       category: finalCategory,
-      icon: formData.type === "Credit" ? "trending_up" : "trending_down",
-      iconColor: formData.type === "Credit" ? "text-secondary" : "text-tertiary",
-      iconBg: formData.type === "Credit"
+      icon: isCredit ? "trending_up" : "trending_down",
+      iconColor: isCredit ? "text-secondary" : "text-tertiary",
+      iconBg: isCredit
         ? "bg-secondary/10 border-secondary shadow-[0_0_10px_rgba(78,222,163,0.1)]"
         : "bg-tertiary/10 border-tertiary shadow-[0_0_10px_rgba(255,179,173,0.1)]",
-      amountColor: formData.type === "Credit" ? "text-secondary" : "text-tertiary",
+      amountColor: isCredit ? "text-secondary" : "text-tertiary",
     };
 
     if (editingTransaction) {

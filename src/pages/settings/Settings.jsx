@@ -53,13 +53,7 @@ const Settings = () => {
     if (!isEditingProfile) setDraftProfile(userProfile);
   }, [userProfile, isEditingProfile]);
 
-  const hasPendingChanges =
-    isEditingProfile &&
-    (draftProfile.fullName !== userProfile.fullName ||
-      draftProfile.email !== userProfile.email ||
-      draftProfile.bio !== userProfile.bio ||
-      draftProfile.avatar !== userProfile.avatar);
-
+  const hasPendingChanges = isEditingProfile && Object.keys(userProfile).some(k => draftProfile[k] !== userProfile[k]);
   const hasGoalChange = draftGoal !== savingsGoal;
 
   const saveProfileChanges = () => {

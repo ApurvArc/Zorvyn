@@ -34,7 +34,7 @@ const AnimatedCardValue = ({ amount, color }) => {
 };
 
 const Dashboard = () => {
-  const { dashboardCards, spendingCategories, transactions } = useAppContext();
+  const { dashboardCards, displayCategories, transactions, getCategoryColor, parsedAmount } = useAppContext();
   const [timeFilter, setTimeFilter] = React.useState("1M");
   const [hoveredPoint, setHoveredPoint] = React.useState(null);
   const [hoveredCategory, setHoveredCategory] = React.useState(null);
@@ -44,33 +44,12 @@ const Dashboard = () => {
     secondary: "text-secondary",
     tertiary: "text-tertiary",
   };
-  const OTHER_COLOR = "#94a3b8";
-  const getCategoryColor = React.useCallback((name) => {
-    const key = String(name || "Other").trim();
-    if (key.toLowerCase() === "other") return OTHER_COLOR;
-    const hash = [...key].reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 0);
-    const hue = hash % 360;
-    return `hsl(${hue} 72% 56%)`;
-  }, []);
-  const displayCategories = React.useMemo(() => {
-    return [...spendingCategories]
-      .map((cat) => ({
-        ...cat,
-        name: cat.name || "Other",
-      }))
-      .sort((a, b) => (b.rawAmount || 0) - (a.rawAmount || 0));
-  }, [spendingCategories]);
 
   const getChartData = React.useCallback(() => {
-    const parseAmount = (amountStr) => {
-      const isDebit = amountStr.trim().startsWith("-");
-      const num = Number(amountStr.replace(/[^\d.]/g, ""));
-      return isDebit ? -num : num;
-    };
     const txTimeline = transactions
       .map((tx) => ({
         date: new Date(tx.date),
-        value: parseAmount(tx.amount),
+        value: parsedAmount(tx.amount),
       }))
       .filter((tx) => !Number.isNaN(tx.date.getTime()))
       .sort((a, b) => a.date - b.date);

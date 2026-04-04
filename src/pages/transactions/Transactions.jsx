@@ -41,6 +41,7 @@ const Transactions = () => {
     setStartDate,
     endDate,
     setEndDate,
+    parsedAmount,
     deleteTransaction,
     setIsModalOpen,
     setEditingTransaction,
@@ -93,35 +94,26 @@ const Transactions = () => {
   };
 
   const handleResetFilters = () => {
-    const defaultCategory = "All Categories";
-    const defaultSort = "latest";
+    const defaults = { category: "All Categories", sort: "latest", val: "" };
     
-    setLocalCategory(defaultCategory);
-    setLocalSort(defaultSort);
-    setLocalMin("");
-    setLocalMax("");
-    setLocalStart("");
-    setLocalEnd("");
+    setLocalCategory(defaults.category);
+    setLocalSort(defaults.sort);
+    setLocalMin(defaults.val);
+    setLocalMax(defaults.val);
+    setLocalStart(defaults.val);
+    setLocalEnd(defaults.val);
 
-    // Also reset global state immediately
-    setSelectedCategory(defaultCategory);
-    setSortOrder(defaultSort);
-    setMinAmount("");
-    setMaxAmount("");
-    setStartDate("");
-    setEndDate("");
+    setSelectedCategory(defaults.category);
+    setSortOrder(defaults.sort);
+    setMinAmount(defaults.val);
+    setMaxAmount(defaults.val);
+    setStartDate(defaults.val);
+    setEndDate(defaults.val);
   };
 
   const handleExport = (format) => {
     if (!filteredTransactions || filteredTransactions.length === 0) return;
     
-    // Simple parser for export
-    const parseAmt = (str) => {
-      const isDebit = str.trim().startsWith("-");
-      const num = Number(str.replace(/[^\d.]/g, ""));
-      return isDebit ? -num : num;
-    };
-
     const dataToExport = filteredTransactions.map(tx => ({
       ID: tx.id,
       Date: tx.date,
@@ -129,7 +121,7 @@ const Transactions = () => {
       Title: tx.title,
       Subtitle: tx.subtitle,
       Amount: tx.amount,
-      RawValue: parseAmt(tx.amount),
+      RawValue: parsedAmount(tx.amount),
       Type: tx.type,
       Category: tx.category,
     }));

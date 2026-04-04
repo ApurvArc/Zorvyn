@@ -5,25 +5,9 @@ import { Building2, CheckCircle, AlertTriangle, Activity, PiggyBank, ArrowRight 
 import { useAppContext } from "../../context/AppContext";
 
 const Insights = () => {
-  const { spendingCategories, totals, savingsPotential, flowComparison, signals, topSpendCategory, savingsGoal } = useAppContext();
+  const { displayCategories, totals, savingsPotential, flowComparison, signals, topSpendCategory, savingsGoal, getCategoryColor } = useAppContext();
   const [hoveredFlow, setHoveredFlow] = React.useState(null);
   const [hoveredCategory, setHoveredCategory] = React.useState(null);
-  const OTHER_COLOR = "#94a3b8";
-  const getCategoryColor = React.useCallback((name) => {
-    const key = String(name || "Other").trim();
-    if (key.toLowerCase() === "other") return OTHER_COLOR;
-    const hash = [...key].reduce((acc, ch) => (acc * 31 + ch.charCodeAt(0)) >>> 0, 0);
-    const hue = hash % 360;
-    return `hsl(${hue} 72% 56%)`;
-  }, []);
-  const displayCategories = React.useMemo(() => {
-    return [...spendingCategories]
-      .map((cat) => ({
-        ...cat,
-        name: cat.name || "Other",
-      }))
-      .sort((a, b) => (b.rawAmount || 0) - (a.rawAmount || 0));
-  }, [spendingCategories]);
 
   return (
     <motion.main

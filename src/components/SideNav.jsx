@@ -47,11 +47,11 @@ const SideNav = () => {
         </div>
 
         <nav className="flex-1 space-y-2">
-          {navItems.map((item) => {
-            const Icon = iconMap[item.id] || LayoutDashboard;
+          {navItems.map(({ id, path, label }) => {
+            const Icon = iconMap[id] || LayoutDashboard;
             return (
               <NavLink
-                key={item.id}
+                key={id}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className={({ isActive }) =>
                   `flex items-center space-x-3 rounded-md px-4 py-3 transition-all duration-150 ${isActive
@@ -59,10 +59,10 @@ const SideNav = () => {
                     : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-800 dark:hover:text-gray-200"
                   }`
                 }
-                to={item.path}
+                to={path}
               >
                 <Icon size={18} />
-                <span>{item.label}</span>
+                <span>{label}</span>
               </NavLink>
             );
           })}
@@ -71,11 +71,7 @@ const SideNav = () => {
         <div className="space-y-4">
           {activeRole === "Admin" && (
             <button
-              onClick={() => {
-                setEditingTransaction(null);
-                setIsModalOpen(true);
-                setIsMobileMenuOpen(false);
-              }}
+              onClick={() => { setEditingTransaction(null); setIsModalOpen(true); setIsMobileMenuOpen(false); }}
               className="mt-auto flex w-full items-center justify-center space-x-2 rounded-md bg-primary-container px-4 py-3 text-[11px] font-bold text-white transition-all hover:brightness-110"
               type="button"
             >
@@ -85,16 +81,16 @@ const SideNav = () => {
           )}
 
           <div className="space-y-1">
-            {footerItems.map((item) => {
-              const Icon = iconMap[item.id] || LifeBuoy;
+            {footerItems.map(({ id, path, label }) => {
+              const Icon = iconMap[id] || LifeBuoy;
               return (
                 <a
-                  key={item.id}
+                  key={id}
                   className="flex items-center space-x-3 rounded-md px-4 py-2 text-gray-500 dark:text-gray-400 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-slate-800 hover:text-gray-800 dark:hover:text-gray-200"
-                  href={item.path}
+                  href={path}
                 >
                   <Icon size={16} />
-                  <span>{item.label}</span>
+                  <span>{label}</span>
                 </a>
               );
             })}
