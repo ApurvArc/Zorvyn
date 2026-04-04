@@ -215,12 +215,12 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
           {/* Balance Trend Chart */}
           <div className="lg:col-span-8 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-sm">
-            <div className="mb-10 flex items-end justify-between">
+            <div className="mb-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
               <div>
                 <h2 className="text-2xl font-bold tracking-tight text-gray-800 dark:text-gray-100">Balance Trend</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Portfolio performance across major asset classes</p>
               </div>
-              <div className="flex rounded-lg bg-surface-container-high p-1">
+              <div className="flex flex-wrap rounded-lg bg-surface-container-high p-1">
                 {["1M", "3M", "6M", "YTD", "MAX"].map((filter) => (
                   <button
                     key={filter}

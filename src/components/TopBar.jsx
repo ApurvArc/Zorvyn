@@ -40,17 +40,17 @@ const TopBar = () => {
   const title = pageTitles[location.pathname] || "Zorvyn";
 
   return (
-    <header className="fixed top-0 left-64 right-0 z-50 max-lg:left-0 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center px-8 py-3 antialiased tracking-tight transition-colors duration-300">
+    <header className="fixed top-0 left-64 right-0 z-50 max-lg:left-0 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center px-4 sm:px-8 py-3 antialiased tracking-tight transition-colors duration-300">
       {/* Left: Title + Search */}
-      <div className="flex items-center space-x-6">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center space-x-2 sm:space-x-6">
+        <div className="flex items-center gap-2 sm:gap-4">
           <button 
             className="lg:hidden text-gray-800 dark:text-gray-100 p-1 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-md transition-colors"
             onClick={() => setIsMobileMenuOpen(true)}
           >
             <Menu size={20} />
           </button>
-          <h1 className="text-sm font-black uppercase tracking-widest text-gray-800 dark:text-gray-100">{title}</h1>
+          <h1 className="hidden sm:block text-sm font-black uppercase tracking-widest text-gray-800 dark:text-gray-100">{title}</h1>
         </div>
         <div className="hidden md:flex items-center bg-gray-50 dark:bg-slate-800 rounded-full px-4 py-2 border border-gray-200 dark:border-gray-700 w-56">
           <Search size={14} className="text-gray-500 dark:text-gray-400 mr-2" />
@@ -116,7 +116,7 @@ const TopBar = () => {
           )}
 
           {isNotifOpen && (
-            <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-2xl rounded-xl overflow-hidden z-[100] animate-fade-in text-gray-800 dark:text-gray-100">
+            <div className="absolute -right-12 sm:right-0 mt-3 w-[290px] sm:w-80 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 shadow-2xl rounded-xl overflow-hidden z-[100] animate-fade-in text-gray-800 dark:text-gray-100">
               <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-slate-900/50">
                 <h3 className="font-bold text-sm">Notifications</h3>
                 {unreadCount > 0 && (

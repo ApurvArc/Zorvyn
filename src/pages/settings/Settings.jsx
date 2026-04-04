@@ -92,8 +92,8 @@ const Settings = () => {
         </header>
 
         {/* Profile Header */}
-        <section className="mb-10 flex flex-col items-end justify-between gap-8 md:flex-row">
-          <div className="flex items-center gap-8">
+        <section className="mb-10 flex flex-col items-center justify-between gap-8 md:flex-row md:items-end">
+          <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 text-center sm:text-left">
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-primary/20 blur-2xl" />
               <img
@@ -103,25 +103,25 @@ const Settings = () => {
               />
             </div>
             <div>
-              <h2 className="mb-2 text-5xl font-black tracking-tighter text-gray-800 dark:text-gray-100">
+              <h2 className="mb-2 text-3xl sm:text-5xl font-black tracking-tighter text-gray-800 dark:text-gray-100">
                 {isEditingProfile ? draftProfile.fullName : userProfile.fullName}
               </h2>
-              <div className="flex items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-500">
-                <span className="flex items-center gap-1.5">
+              <div className="flex flex-wrap justify-center sm:justify-start items-center gap-4 text-xs font-medium text-gray-500 dark:text-gray-500">
+                <span className="flex items-center gap-1.5 whitespace-nowrap">
                   <span className="h-2 w-2 rounded-full bg-secondary" />
                   Node Online: US-EAST-01
                 </span>
-                <span className="h-1 w-1 rounded-full bg-gray-300 dark:bg-white/10" />
-                <span>Last Auth: 4m ago</span>
+                <span className="hidden sm:inline-block h-1 w-1 rounded-full bg-gray-300 dark:bg-white/10" />
+                <span className="whitespace-nowrap">Last Auth: 4m ago</span>
               </div>
             </div>
           </div>
 
-          <div className="flex rounded-lg border border-gray-200 bg-surface-container-lowest p-1 dark:border-gray-700">
+          <div className="flex w-full sm:w-auto justify-center rounded-lg border border-gray-200 bg-surface-container-lowest p-1 dark:border-gray-700">
             <button
               onClick={() => setActiveRole("Admin")}
               type="button"
-              className={`rounded-md px-6 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`flex-1 sm:flex-none rounded-md px-6 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${
                 activeRole === "Admin"
                   ? "bg-primary text-white shadow-sm"
                   : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
@@ -132,7 +132,7 @@ const Settings = () => {
             <button
               onClick={() => setActiveRole("Viewer")}
               type="button"
-              className={`rounded-md px-6 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${
+              className={`flex-1 sm:flex-none rounded-md px-6 py-2 text-[10px] font-black uppercase tracking-widest transition-all ${
                 activeRole === "Viewer"
                   ? "bg-primary text-white shadow-sm"
                   : "text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300"
@@ -405,18 +405,18 @@ const Settings = () => {
             {hasGoalChange && hasPendingChanges ? "Unsaved profile & goal changes" : hasGoalChange ? "Savings goal not yet applied" : "Unsaved profile changes detected"}
           </p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <button
             type="button"
             onClick={discardProfileChanges}
-            className="px-6 py-2 text-[10px] font-black uppercase tracking-widest text-gray-500 transition-all hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100"
+            className="w-full sm:w-auto px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 transition-all hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-100"
           >
             Discard Changes
           </button>
           <button
             type="button"
             onClick={saveProfileChanges}
-            className="rounded-sm bg-gradient-to-r from-primary to-primary-container px-10 py-3 text-xs font-black uppercase tracking-[0.2em] text-white shadow-[0_0_30px_rgba(192,193,255,0.2)] transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full sm:w-auto rounded-sm bg-gradient-to-r from-primary to-primary-container px-10 py-3 text-xs font-black uppercase tracking-[0.2em] text-white shadow-[0_0_30px_rgba(192,193,255,0.2)] transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             Save Changes
           </button>

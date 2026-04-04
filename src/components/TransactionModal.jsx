@@ -87,7 +87,7 @@ const TransactionModal = () => {
       onClick={() => setIsModalOpen(false)}
     >
       <div
-        className="bg-white dark:bg-slate-800 rounded-xl w-full max-w-md p-8 shadow-2xl border border-gray-200 dark:border-gray-700 animate-fade-in"
+        className="bg-white dark:bg-slate-800 rounded-xl w-full max-w-md p-6 sm:p-8 shadow-2xl border border-gray-200 dark:border-gray-700 animate-fade-in mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6">

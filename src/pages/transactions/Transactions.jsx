@@ -216,7 +216,7 @@ const Transactions = () => {
               </button>
 
               {isFilterOpen && (
-                <div className="absolute top-full left-0 mt-3 w-80 md:w-96 bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] p-6 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute top-full -right-4 sm:right-auto sm:left-0 mt-3 w-[300px] sm:w-80 md:w-96 bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] p-6 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="space-y-6">
                     {filterValidationError && (
                       <div className="bg-tertiary/10 border border-tertiary/50 text-tertiary px-3 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 animate-in fade-in slide-in-from-top-1 px-3 py-2">
@@ -245,19 +245,25 @@ const Transactions = () => {
 
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400">Amount Range ($)</label>
-                      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-                        <input type="number" min="0" placeholder="Min" value={localMin} onChange={(e) => setLocalMin(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-xs text-gray-800 dark:text-gray-100 outline-none transition-all ${localMin && localMax && parseFloat(localMin) > parseFloat(localMax) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
-                        <span className="text-[10px] uppercase font-bold text-gray-400">to</span>
-                        <input type="number" min="0" placeholder="Max" value={localMax} onChange={(e) => setLocalMax(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-xs text-gray-800 dark:text-gray-100 outline-none transition-all ${localMin && localMax && parseFloat(localMin) > parseFloat(localMax) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
+                      <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center gap-2 sm:gap-3">
+                        <input type="number" min="0" placeholder="Min Amount" value={localMin} onChange={(e) => setLocalMin(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-xs text-gray-800 dark:text-gray-100 outline-none transition-all ${localMin && localMax && parseFloat(localMin) > parseFloat(localMax) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
+                        <span className="hidden sm:inline text-[10px] uppercase font-bold text-gray-400 text-center">to</span>
+                        <input type="number" min="0" placeholder="Max Amount" value={localMax} onChange={(e) => setLocalMax(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-xs text-gray-800 dark:text-gray-100 outline-none transition-all ${localMin && localMax && parseFloat(localMin) > parseFloat(localMax) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400">Date Range</label>
-                      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-                        <input type="date" value={localStart} onChange={(e) => setLocalStart(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-[10px] text-gray-800 dark:text-gray-100 outline-none transition-all ${localStart && localEnd && new Date(localStart) > new Date(localEnd) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
-                        <span className="text-[10px] uppercase font-bold text-gray-400">to</span>
-                        <input type="date" value={localEnd} onChange={(e) => setLocalEnd(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-[10px] text-gray-800 dark:text-gray-100 outline-none transition-all ${localStart && localEnd && new Date(localStart) > new Date(localEnd) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
+                      <div className="flex flex-col sm:grid sm:grid-cols-[1fr_auto_1fr] sm:items-center gap-2 sm:gap-3">
+                        <div className="w-full relative">
+                          <span className="sm:hidden absolute -top-1.5 left-2 bg-white dark:bg-slate-900 px-1 text-[8px] font-bold text-primary uppercase">Start</span>
+                          <input type="date" value={localStart} onChange={(e) => setLocalStart(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-xs text-gray-800 dark:text-gray-100 outline-none transition-all ${localStart && localEnd && new Date(localStart) > new Date(localEnd) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
+                        </div>
+                        <span className="hidden sm:inline text-[10px] uppercase font-bold text-gray-400 text-center">to</span>
+                        <div className="w-full relative">
+                          <span className="sm:hidden absolute -top-1.5 left-2 bg-white dark:bg-slate-900 px-1 text-[8px] font-bold text-primary uppercase">End</span>
+                          <input type="date" value={localEnd} onChange={(e) => setLocalEnd(e.target.value)} className={`w-full min-w-0 bg-gray-50 dark:bg-slate-800 border rounded-lg px-3 py-2.5 text-xs text-gray-800 dark:text-gray-100 outline-none transition-all ${localStart && localEnd && new Date(localStart) > new Date(localEnd) ? "border-tertiary focus:border-tertiary" : "border-gray-200 dark:border-gray-700 focus:border-primary"}`} />
+                        </div>
                       </div>
                     </div>
 
@@ -277,7 +283,7 @@ const Transactions = () => {
                 <Download size={16} />
                 <span>Export</span>
               </button>
-              <div className="absolute top-full right-0 mt-2 w-36 bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col py-1.5 z-50 overflow-hidden">
+              <div className="absolute top-full left-0 sm:left-auto sm:right-0 mt-2 w-36 bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all flex flex-col py-1.5 z-50 overflow-hidden">
                 <button onClick={() => handleExport('csv')} className="px-4 py-2 text-xs text-left text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 font-bold transition-colors">Export as CSV</button>
                 <button onClick={() => handleExport('json')} className="px-4 py-2 text-xs text-left text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-800 font-bold transition-colors">Export as JSON</button>
               </div>
@@ -292,14 +298,15 @@ const Transactions = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-sm">
-          <div className="grid grid-cols-12 px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-800 text-[10px] uppercase tracking-[0.15em] font-black text-gray-500 dark:text-gray-400">
-            <div className="col-span-2">Date / Time</div>
-            <div className="col-span-4">Description</div>
-            <div className="col-span-2 text-right">Amount</div>
-            <div className="col-span-2 px-6">Category</div>
-            <div className="col-span-2 text-right">Actions</div>
-          </div>
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-x-auto relative">
+          <div className="min-w-[800px]">
+            <div className="grid grid-cols-12 px-6 py-4 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-slate-800 text-[10px] uppercase tracking-[0.15em] font-black text-gray-500 dark:text-gray-400">
+              <div className="col-span-2">Date / Time</div>
+              <div className="col-span-4">Description</div>
+              <div className="col-span-2 text-right">Amount</div>
+              <div className="col-span-2 px-6">Category</div>
+              <div className="col-span-2 text-right">Actions</div>
+            </div>
 
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             {currentData.map((tx) => (
@@ -346,10 +353,11 @@ const Transactions = () => {
               </div>
               <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages} className="w-8 h-8 flex items-center justify-center rounded bg-gray-200 dark:bg-slate-700 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-100 transition-all disabled:opacity-30 disabled:cursor-not-allowed"><ChevronRight size={14} /></button>
             </div>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-6 mt-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mt-8">
           <SummaryCard label="Total Monthly Flow" value={`$${(totals.inflow + totals.outflow).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} border="border-l-primary" />
           <SummaryCard label="Net Income" value={`$${totals.inflow.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} border="border-l-secondary" />
           <SummaryCard label="Operating Expenses" value={`$${totals.outflow.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} border="border-l-tertiary" />

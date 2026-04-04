@@ -60,9 +60,9 @@ const Insights = () => {
 
           {/* Flow Comparison Chart — driven by computed weekly data */}
           <div className="col-span-12 md:col-span-8 bg-white dark:bg-slate-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 flex flex-col shadow-sm">
-            <div className="flex justify-between items-center mb-10">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
               <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Weekly Outflow Comparison</h3>
-              <div className="flex items-center space-x-4 text-xs">
+              <div className="flex flex-wrap items-center gap-4 text-xs">
                 <div className="flex items-center justify-center text-gray-500 dark:text-gray-400"><span className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600 mr-2"></span> Prior Week</div>
                 <div className="flex items-center justify-center text-gray-800 dark:text-gray-100"><span className="w-2 h-2 rounded-full bg-primary mr-2"></span> Current Week</div>
               </div>
