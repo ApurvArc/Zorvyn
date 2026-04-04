@@ -6,6 +6,7 @@ const TransactionModal = () => {
   const { isModalOpen, setIsModalOpen, addTransaction, updateTransaction, editingTransaction, categories } = useAppContext();
   const [formData, setFormData] = useState({
     title: "",
+    subtitle: "",
     amount: "",
     type: "Credit",
     category: "Operations"
@@ -25,6 +26,7 @@ const TransactionModal = () => {
     if (editingTransaction) {
       setFormData({
         title: editingTransaction.title || "",
+        subtitle: editingTransaction.subtitle || "",
         amount: String(editingTransaction.amount).replace(/[^0-9.]/g, ""),
         type: editingTransaction.type || "Credit",
         category: editingTransaction.category || "Operations",
@@ -34,7 +36,7 @@ const TransactionModal = () => {
       const defaultCategory = categoryOptions.includes("Operations")
         ? "Operations"
         : (categoryOptions[0] || "Other");
-      setFormData({ title: "", amount: "", type: "Credit", category: defaultCategory });
+      setFormData({ title: "", subtitle: "", amount: "", type: "Credit", category: defaultCategory });
       setNewCategory("");
     }
   }, [editingTransaction, isModalOpen, categoryOptions]);
@@ -54,6 +56,7 @@ const TransactionModal = () => {
 
     const baseTxData = {
       title: formData.title || (editingTransaction ? "Updated Transaction" : "New Transaction"),
+      subtitle: formData.subtitle || "Manual Entry",
       amount: formattedAmount,
       type: formData.type,
       category: finalCategory,
@@ -73,7 +76,6 @@ const TransactionModal = () => {
         id: Date.now(),
         date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         time: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) + ' UTC',
-        subtitle: "Manual Entry",
       });
     }
 
@@ -105,6 +107,16 @@ const TransactionModal = () => {
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:border-primary"
               placeholder="e.g. Server Hosting"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1">Subtitle / Reference</label>
+            <input
+              value={formData.subtitle}
+              onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+              className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:border-primary"
+              placeholder="e.g. AWS Invoice #123"
             />
           </div>
 

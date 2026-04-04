@@ -34,6 +34,10 @@ export const AppProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [sortOrder, setSortOrder] = useState("latest");
+  const [minAmount, setMinAmount] = useState("");
+  const [maxAmount, setMaxAmount] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -229,25 +233,60 @@ export const AppProvider = ({ children }) => {
   // --- Derived: filtered transactions for ledger ---
   const filteredTransactions = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
+
+    const parseTxDate = (dateStr) => {
+      const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const parts = dateStr.split(", ");
+      const dateParts = parts[0].split(" ");
+      const m = months.indexOf(dateParts[0]);
+      const d = parseInt(dateParts[1]);
+      const y = parseInt(parts[1]);
+      return new Date(y, m, d);
+    };
+
+    const parseInputDate = (dateStr) => {
+      if (!dateStr) return null;
+      const [y, m, d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    };
+
+    const startD = parseInputDate(startDate);
+    const endD = parseInputDate(endDate);
+
     const filtered = transactions.filter((tx) => {
       const matchesSearch =
         !q ||
         tx.title.toLowerCase().includes(q) ||
         tx.category.toLowerCase().includes(q);
+
       const matchesCategory =
         selectedCategory === "All Categories" || tx.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+
+      const amt = Math.abs(parsedAmount(tx.amount));
+      const matchesMinAmount = minAmount === "" || amt >= parseFloat(minAmount);
+      const matchesMaxAmount = maxAmount === "" || amt <= parseFloat(maxAmount);
+
+      const txDate = parseTxDate(tx.date);
+      const matchesStartDate = !startD || txDate >= startD;
+      const matchesEndDate = !endD || txDate <= endD;
+
+      return matchesSearch && matchesCategory && matchesMinAmount && matchesMaxAmount && matchesStartDate && matchesEndDate;
     });
+
     return filtered.sort((a, b) => {
-      if (sortOrder === "latest") return new Date(b.date) - new Date(a.date);
-      if (sortOrder === "oldest") return new Date(a.date) - new Date(b.date);
+      const dateA = parseTxDate(a.date);
+      const dateB = parseTxDate(b.date);
+
+      if (sortOrder === "latest") return dateB - dateA;
+      if (sortOrder === "oldest") return dateA - dateB;
+
       const aAmt = Math.abs(parsedAmount(a.amount));
       const bAmt = Math.abs(parsedAmount(b.amount));
       if (sortOrder === "amount-high") return bAmt - aAmt;
-      if (sortOrder === "amount-low")  return aAmt - bAmt;
+      if (sortOrder === "amount-low") return aAmt - bAmt;
       return 0;
     });
-  }, [transactions, searchTerm, selectedCategory, sortOrder]);
+  }, [transactions, searchTerm, selectedCategory, sortOrder, minAmount, maxAmount, startDate, endDate]);
 
   // --- Derived: dynamic categories list from transactions ---
   const categories = useMemo(() => {
@@ -427,6 +466,14 @@ export const AppProvider = ({ children }) => {
     setSelectedCategory,
     sortOrder,
     setSortOrder,
+    minAmount,
+    setMinAmount,
+    maxAmount,
+    setMaxAmount,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
     isMobileMenuOpen,
     setIsMobileMenuOpen,
     isModalOpen,
@@ -458,6 +505,12 @@ export const AppProvider = ({ children }) => {
     topSpendCategory,
     flowComparison,
     signals,
+    auditCompliance: useMemo(() => {
+      if (transactions.length === 0) return 100;
+      const valid = transactions.filter(tx => tx.category && tx.category !== "Other" && tx.category !== "Operations").length;
+      const score = (valid / transactions.length) * 100;
+      return score.toFixed(1);
+    }, [transactions]),
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
