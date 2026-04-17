@@ -395,7 +395,7 @@ const Settings = () => {
 
       {/* Sticky Save Footer */}
       <footer
-        className={`fixed bottom-0 left-64 right-0 z-40 flex items-center justify-between border-t border-gray-200 bg-white/90 px-12 py-4 backdrop-blur-xl dark:border-gray-700 dark:bg-slate-900/90 max-lg:left-0 max-md:flex-col max-md:items-start max-md:gap-4 max-md:px-4 ${
+        className={`fixed bottom-0 left-64 right-0 z-40 flex items-center justify-between border-t border-gray-200 bg-surface-container/90 px-12 py-4 backdrop-blur-xl dark:border-gray-700 dark:bg-surface-container/90 max-lg:left-0 max-md:flex-col max-md:items-start max-md:gap-4 max-md:px-4 ${
           hasPendingChanges || hasGoalChange ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0"
         } transition-all duration-300`}
       >
